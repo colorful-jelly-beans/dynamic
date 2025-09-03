@@ -1,4 +1,4 @@
-import { ref } from "../index.js"
+import { ref } from "../index"
 
 export const route = ref(window.location.pathname)
 

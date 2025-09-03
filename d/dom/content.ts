@@ -1,4 +1,4 @@
-import { computed, watchEffect } from "../index.js"
+import { computed, watchEffect } from "../index"
 
 export const addEffectToElementContent = (elem, cont, propertyToChange) => {
     if (cont === null) return

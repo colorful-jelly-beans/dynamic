@@ -1,5 +1,5 @@
-import { addEffectToElementContent } from "./content.js"
-import { createScopedStyle, addOptionsToElem, watch } from "../index.js"
+import { addEffectToElementContent } from "./content"
+import { createScopedStyle, addOptionsToElem, watch } from "../index"
 
 export const e = (tag, cont, options) => {
     if (tag === "textNode") {

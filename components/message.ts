@@ -1,4 +1,6 @@
-const setup = () => { }
+import { e, mounter } from "../d/index"
+
+const setup = (): void => { }
 
 function render() {
     const m = e("p", "hi", {

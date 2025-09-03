@@ -1,6 +1,6 @@
-import { route, router, ref, watch, computed } from "../d/index.js"
+import { route, router, ref, watch, computed, mounter, e } from "../d/index"
 
-import Message from "./message.js"
+import Message from "./message"
 
 const setup = () => {
     const counter = ref(0)

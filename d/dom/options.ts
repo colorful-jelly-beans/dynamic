@@ -1,4 +1,4 @@
-import { watch } from "../index.js"
+import { watch } from "../index"
 
 export const addOptionsToElem = (elem, options) => {
     let out = elem

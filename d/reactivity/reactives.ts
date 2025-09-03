@@ -1,5 +1,5 @@
-import { activeEffect } from "./globals.js"
-import { watchEffect } from "./watchers.js"
+import { activeEffect } from "./globals"
+import { watchEffect } from "./watchers"
 
 export const ref = (val) => {
     let innerValue = val
