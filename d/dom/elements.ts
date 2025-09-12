@@ -124,8 +124,6 @@ export const mount = <Props>(
   return docFragm;
 };
 
-type DirectiveNameOn = `@${string}`;
-
 export type Options = {
   [option in string]: any;
 };
