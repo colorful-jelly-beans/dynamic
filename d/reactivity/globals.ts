@@ -1,5 +1,7 @@
-export let activeEffect = null
+import { Effect } from "./watchers";
 
-export const setActiveEffect = (value) => {
-    activeEffect = value
-}
+export let activeEffect: Effect | null = null;
+
+export const setActiveEffect = (effect: typeof activeEffect) => {
+  activeEffect = effect;
+};

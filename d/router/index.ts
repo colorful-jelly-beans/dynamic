@@ -1,14 +1,14 @@
-import { ref } from "../index"
+import { ref } from "../index";
 
-export const route = ref(window.location.pathname)
+export const route = ref(window.location.pathname);
 
 export const router = {
-    push(location) {
-        route.value = location
-        history.pushState({}, '', location)
-    }
-}
+  push(location: string) {
+    route.value = location;
+    history.pushState({}, "", location);
+  },
+};
 
 window.addEventListener("popstate", () => {
-    route.value = document.location.pathname
+  route.value = document.location.pathname;
 });

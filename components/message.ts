@@ -1,29 +1,30 @@
-import { e, mounter } from "../d/index"
+import { e, mounter, Ref } from "../d/index";
+import { onBeforeMount, onUnmounted } from "../d/lifecycle/hooks";
 
-const setup = (): void => { }
-
-function render() {
-    const m = e("p", "hi", {
-        "class": "yo"
-    })
-
-    const t = e("p", () => this.counter.value, {
-        "class": "hey"
-    })
-
-    return [m, t]
+interface P {
+  counter: Ref<number>;
 }
 
-const hooks = {
-    created() {
-        console.log('msg created')
-    },
-    beforeMount() {
-        console.log('msg beforeMount', this.counter.value)
-    },
-    unmounted() {
-        console.log('msg unmounted', this.counter.value)
-    }
+function render(props: P) {
+  console.log("msg created!!");
+
+  onBeforeMount(() => {
+    console.log("msg onBeforeMount", props.counter.value);
+  });
+
+  onUnmounted(() => {
+    console.log("msg onUnmounted", props.counter.value);
+  });
+
+  const m = e("p", "hi", {
+    class: "yo",
+  });
+
+  const t = e("p", () => props.counter.value, {
+    class: "hey",
+  });
+
+  return [m, t];
 }
 
-export default mounter(setup, render, hooks)
+export default mounter(render);
