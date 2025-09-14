@@ -1,11 +1,23 @@
 import { addEffectToElementContent } from "./content";
 import { createScopedStyle, addOptionsToElem, watch, Ref } from "../index";
 
+export type ElementContent = Ref<any> | (() => any) | string | null;
+
+export type UniversalCallback = (...args: any[]) => any;
+
+export type Options = {
+  [option in string]: any;
+};
+
+export type HTMLNode = HTMLElement | Element | Comment;
+
+type RenderFunction<Props> = (
+  props: Props
+) => (DocumentFragment | HTMLNode | Text)[];
+
 const setComponentIDDataAttribute = (element: Element, componentID: number) => {
   element.setAttribute(`data-d-${componentID}`, "");
 };
-
-export type ElementContent = Ref<any> | (() => any) | string | null;
 
 // what if e would return mount func and behave like a component?
 export const e = (tag: string, cont: ElementContent, options?: Options) => {
@@ -46,8 +58,6 @@ export enum HookName {
   OnUnmounted = "onUnmounted",
   OnBeforeMount = "onBeforeMount",
 }
-
-export type UniversalCallback = (...args: any[]) => any;
 
 export let componentsHooks: {
   [componentID: number]: {
@@ -123,16 +133,6 @@ export const mount = <Props>(
 
   return docFragm;
 };
-
-export type Options = {
-  [option in string]: any;
-};
-
-export type HTMLNode = HTMLElement | Element | Comment;
-
-type RenderFunction<Props> = (
-  props: Props
-) => (DocumentFragment | HTMLNode | Text)[];
 
 export const mounter = <Props>(render: RenderFunction<Props>, css?: string) => {
   return (props?: Props, options?: Options) =>
