@@ -16,7 +16,7 @@ export const e = (tag: string, cont: ElementContent, options?: Options) => {
     return node;
   }
 
-  let elem: HTMLElement | Element | Comment = document.createElement(tag);
+  let elem: HTMLNode = document.createElement(tag);
 
   const propertyToChange = tag === "input" ? "value" : "innerHTML";
 
@@ -128,9 +128,11 @@ export type Options = {
   [option in string]: any;
 };
 
+export type HTMLNode = HTMLElement | Element | Comment;
+
 type RenderFunction<Props> = (
   props: Props
-) => (DocumentFragment | HTMLElement | Element | Comment | Text)[];
+) => (DocumentFragment | HTMLNode | Text)[];
 
 export const mounter = <Props>(render: RenderFunction<Props>, css?: string) => {
   return (props?: Props, options?: Options) =>

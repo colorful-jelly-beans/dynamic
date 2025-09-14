@@ -1,7 +1,7 @@
-import { computed, ElementContent, watchEffect } from "../index";
+import { computed, ElementContent, HTMLNode, watchEffect } from "../index";
 
 export const addEffectToElementContent = (
-  elem: HTMLElement | Element | Comment,
+  elem: HTMLNode,
   cont: ElementContent,
   propertyToChange: string
 ) => {

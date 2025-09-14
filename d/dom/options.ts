@@ -1,9 +1,6 @@
-import { Options, watch } from "../index";
+import { HTMLNode, Options, watch } from "../index";
 
-export const addOptionsToElem = (
-  elem: HTMLElement | Element | Comment,
-  options: Options
-) => {
+export const addOptionsToElem = (elem: HTMLNode, options: Options) => {
   let out = elem;
   Object.keys(options).forEach((o) => {
     if (o.startsWith("@")) {
@@ -16,7 +13,7 @@ export const addOptionsToElem = (
       const directive = o.slice(1);
       if (directive === "if") {
         const commentNode = document.createComment("_if");
-        let node: HTMLElement | Element | Comment = commentNode;
+        let node: HTMLNode = commentNode;
 
         watch(
           [() => options[o].value],
