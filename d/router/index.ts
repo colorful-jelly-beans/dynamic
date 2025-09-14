@@ -1,4 +1,4 @@
-import { ref } from "../index";
+import { ref } from "../reactivity/reactives";
 
 export const route = ref(window.location.pathname);
 

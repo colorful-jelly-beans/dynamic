@@ -1,5 +1,8 @@
+import { Ref } from "../reactivity/reactives";
+import { watch } from "../reactivity/watchers";
+import { createScopedStyle } from "../style/index";
 import { addEffectToElementContent } from "./content";
-import { createScopedStyle, addOptionsToElem, watch, Ref } from "../index";
+import { addOptionsToElem } from "./options";
 
 export type ElementContent = Ref<any> | (() => any) | string | null;
 

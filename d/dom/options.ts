@@ -1,4 +1,5 @@
-import { HTMLNode, Options, watch } from "../index";
+import { watch } from "../reactivity/watchers";
+import { HTMLNode, Options } from "./elements";
 
 export const addOptionsToElem = (elem: HTMLNode, options: Options) => {
   let out = elem;

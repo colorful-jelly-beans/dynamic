@@ -1,4 +1,6 @@
-import { computed, ElementContent, HTMLNode, watchEffect } from "../index";
+import { computed } from "../reactivity/reactives";
+import { watchEffect } from "../reactivity/watchers";
+import { ElementContent, HTMLNode } from "./elements";
 
 export const addEffectToElementContent = (
   elem: HTMLNode,
