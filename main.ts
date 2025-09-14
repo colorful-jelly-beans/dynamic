@@ -1,3 +1,3 @@
-import App from "./components/app"
+import App from "./components/app";
 
-document.getElementById("app")?.append(App())
+document.getElementById("app")?.append(App());

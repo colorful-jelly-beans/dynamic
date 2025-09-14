@@ -1,16 +1,16 @@
-export const createScopedStyle = (css, componentID) => {
-    if (!css) return
+export const createScopedStyle = (css: string, componentID: number) => {
+  if (!css) return;
 
-    const style = document.createElement('style')
+  const style = document.createElement("style");
 
-    style.textContent = getScopedCss(css, componentID)
-    style.setAttribute('data-d-' + componentID, '')
+  style.textContent = getScopedCss(css, componentID);
+  style.setAttribute("data-d-" + componentID, "");
 
-    document.body.appendChild(style)
-}
+  document.body.appendChild(style);
+};
 
-export const getScopedCss = (cssString, componentID) => {
-    const selectorPattern = /([^},\n]+?(?=({|,)))/g
+export const getScopedCss = (css: string, componentID: number) => {
+  const selectorPattern = /([^},\n]+?(?=({|,)))/g;
 
-    return cssString.replaceAll(selectorPattern, `[data-d-${componentID}]$1`)
-}
+  return css.replace(selectorPattern, `[data-d-${componentID}]$1`);
+};

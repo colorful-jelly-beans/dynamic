@@ -1,94 +1,143 @@
-import { addEffectToElementContent } from "./content"
-import { createScopedStyle, addOptionsToElem, watch } from "../index"
+import { Ref } from "../reactivity/reactives";
+import { watch } from "../reactivity/watchers";
+import { createScopedStyle } from "../style/index";
+import { addEffectToElementContent } from "./content";
+import { addOptionsToElem } from "./options";
 
-export const e = (tag, cont, options) => {
-    if (tag === "textNode") {
-        const node = document.createTextNode("")
-        addEffectToElementContent(node, cont, "textContent")
+export type ElementContent = Ref<any> | (() => any) | string | null;
 
-        return node
+export type UniversalCallback = (...args: any[]) => any;
+
+export type Options = {
+  [option in string]: any;
+};
+
+export type HTMLNode = HTMLElement | Element | Comment;
+
+type RenderFunction<Props> = (
+  props: Props
+) => (DocumentFragment | HTMLNode | Text)[];
+
+const setComponentIDDataAttribute = (element: Element, componentID: number) => {
+  element.setAttribute(`data-d-${componentID}`, "");
+};
+
+// what if e would return mount func and behave like a component?
+export const e = (tag: string, cont: ElementContent, options?: Options) => {
+  if (tag === "textNode") {
+    const node = document.createTextNode("");
+    addEffectToElementContent(node, cont, "textContent");
+
+    return node;
+  }
+
+  let elem: HTMLNode = document.createElement(tag);
+
+  const propertyToChange = tag === "input" ? "value" : "innerHTML";
+
+  addEffectToElementContent(elem, cont, propertyToChange);
+
+  if (options) {
+    elem = addOptionsToElem(elem, options);
+  }
+
+  return elem;
+};
+
+export const replaceComponentWithComment = (
+  componentID: number,
+  commentNode: Comment
+) => {
+  document.querySelectorAll(`[data-d-${componentID}]`).forEach((el, ind) => {
+    if (ind === 0) {
+      el.replaceWith(commentNode);
+    } else {
+      el.remove();
     }
+  });
+};
 
-    let elem = document.createElement(tag)
-    const propertyToChange = tag === "input" ? "value" : "innerHTML"
-
-    addEffectToElementContent(elem, cont, propertyToChange)
-
-    if (options) {
-        elem = addOptionsToElem(elem, options)
-    }
-
-    return elem
+export enum HookName {
+  OnUnmounted = "onUnmounted",
+  OnBeforeMount = "onBeforeMount",
 }
 
-export const replaceComponentWithComment = (componentID, commentNode) => {
-    document.querySelectorAll(`[data-d-${componentID}]`).forEach((el, ind) => {
-        if (ind === 0) {
-            el.replaceWith(commentNode)
+export let componentsHooks: {
+  [componentID: number]: {
+    [hook in HookName]?: UniversalCallback;
+  };
+} = {};
+
+const callComponentHook = (componentID: number, hookName: HookName) => {
+  const hookCallback = componentsHooks[componentID][hookName];
+  if (hookCallback) {
+    hookCallback();
+  }
+};
+
+export let currentComponentID = 0;
+
+export const mount = <Props>(
+  render: RenderFunction<Props>,
+  props?: Props,
+  options?: Options,
+  css?: string,
+  componentID = ++currentComponentID
+) => {
+  if (css) createScopedStyle(css, componentID);
+
+  if (options && "_if" in options) {
+    const commentNode = document.createComment("_if");
+
+    const { _if, ...optionsWithoutIf } = options;
+    const remount = () =>
+      mount(render, props, optionsWithoutIf, css, componentID);
+
+    let node = commentNode;
+
+    watch(
+      [() => options["_if"].value],
+      (newValue) => {
+        if (newValue) {
+          let docFragm = remount();
+          node.replaceWith(docFragm);
         } else {
-            el.remove()
+          callComponentHook(componentID, HookName.OnUnmounted);
+          replaceComponentWithComment(componentID, node);
         }
-    })
-}
+      },
+      false
+    );
 
-let ctx
-export const mount = (setup, render, props, options, hooks, css, componentID = crypto.randomUUID()) => {
-    createScopedStyle(css, componentID)
+    if (!options["_if"].value) return node;
+  }
 
-    if (options && "_if" in options) {
-        const commentNode = document.createComment("_if")
+  const doc = render(props as Props);
 
-        const { _if, ...optionsWithoutIf } = options
-        const remount = () => mount(setup, render, props, optionsWithoutIf, hooks, css, componentID)
-
-        let node = commentNode
-
-        watch([() => options["_if"].value], (newValue) => {
-            if (newValue) {
-                let docFragm = remount()
-                node.replaceWith(docFragm)
-            } else {
-                if ('unmounted' in hooks) {
-                    hooks.unmounted.call(ctx)
-                }
-                replaceComponentWithComment(componentID, node)
-            }
-        }, false)
-
-        if (!options["_if"].value) return node
+  doc.forEach((el) => {
+    if (el instanceof HTMLElement) {
+      setComponentIDDataAttribute(el, componentID);
+      el.querySelectorAll("*").forEach((element) =>
+        setComponentIDDataAttribute(element, componentID)
+      );
     }
+  });
 
-    if ('created' in hooks)
-        hooks.created()
+  const docFragm = document.createDocumentFragment();
+  docFragm.replaceChildren(...doc);
 
-    ctx = { ...props, ...setup(props) }
-
-    let doc = render
-        .call(ctx)
-        .filter(el => el !== null)
-
-    doc.forEach(el => {
-        if (el instanceof HTMLElement) {
-            el.setAttribute("data-d-" + componentID, "")
-        }
-    })
-
-    const docFragm = document.createDocumentFragment()
-    docFragm.replaceChildren(...doc)
-
-    if (options) {
-        for (let child of docFragm.children) {
-            addOptionsToElem(child, options)
-        }
+  if (options) {
+    for (let child of docFragm.children) {
+      addOptionsToElem(child, options);
     }
+  }
 
-    if ('beforeMount' in hooks) {
-        hooks.beforeMount.call(ctx)
-    }
+  callComponentHook(componentID, HookName.OnBeforeMount);
 
-    return docFragm
-}
+  return docFragm;
+};
 
-export const mounter = (setup, render, hooks, css) => {
-    return (props, options) => mount(setup, render, props, options, hooks, css)
-}
+export const mounter = <Props>(render: RenderFunction<Props>, css?: string) => {
+  return (props?: Props, options?: Options) =>
+    mount(render, props, options, css);
+};

@@ -1,67 +1,67 @@
-import { route, router, ref, watch, computed, mounter, e } from "../d/index"
+import { route, router, ref, watch, computed, mounter, e } from "../d/index";
+import { onBeforeMount } from "../d/lifecycle/hooks";
 
-import Message from "./message"
-
-const setup = () => {
-    const counter = ref(0)
-    const inc = () => {
-        counter.value++
-    }
-    const msg = ref("")
-
-    watch([() => msg.value], () => console.log('msg val changed ' + counter.value))
-
-    return { counter, inc, msg }
-}
+import Message from "./message";
 
 function render() {
-    const homeBtn = e("button", 'go home', {
-        "@click": () => router.push('/home')
-    })
+  console.log("app created!!");
 
-    const welcomeBlock = e("div", () => 'Welcome to the Home Page!', {
-        "_if": computed(() => route.value === '/home')
-    })
+  onBeforeMount(() => {
+    console.log("app onBeforeMount");
+  });
 
-    const counter = e("p", () => 'counter: ' + this.counter.value, {
-        "_if": computed(() => this.counter.value % 2 === 0),
-        "class": 'counter'
-    })
+  const counter = ref(0);
+  const inc = () => {
+    counter.value++;
+  };
+  const msg = ref("");
 
-    const msgComponent = Message({ counter: this.counter }, {
-        "_if": computed(() => this.counter.value % 4 === 0),
-        "@click": this.inc,
-        "class": "test",
-    })
+  watch([() => msg.value], () =>
+    console.log("msg val changed " + counter.value)
+  );
 
-    const btn = e("button", () => "click me to make " + (this.counter.value + 1), {
-        "@click": this.inc
-    })
+  const homeBtn = e("button", "go home", {
+    "@click": () => router.push("/home"),
+  });
 
-    const inp = e("input", null, {
-        "@input": (ev) => {
-            this.msg.value = ev.target.value
-        }
-    })
+  const welcomeBlock = e("div", () => "Welcome to the Home Page!", {
+    _if: computed(() => route.value === "/home"),
+  });
 
-    const txt = e("p", () => this.msg.value)
+  const counterText = e("p", () => "counter: " + counter.value, {
+    _if: computed(() => counter.value % 2 === 0),
+    class: "counter",
+  });
 
-    return [homeBtn, welcomeBlock, counter, msgComponent, btn, inp, txt]
-}
+  const msgComponent = Message(
+    { counter: counter },
+    {
+      _if: computed(() => counter.value % 4 === 0),
+      "@click": inc,
+      class: "test",
+    }
+  );
 
-const hooks = {
-    created() {
-        console.log('app created')
+  const btn = e("button", () => "click me to make " + (counter.value + 1), {
+    "@click": inc,
+  });
+
+  const inp = e("input", null, {
+    "@input": (ev: Event) => {
+      const target = ev.target as HTMLInputElement;
+      msg.value = target.value;
     },
-    beforeMount() {
-        console.log('app beforeMount')
-    },
+  });
+
+  const txt = e("p", () => msg.value);
+
+  return [homeBtn, welcomeBlock, counterText, msgComponent, btn, inp, txt];
 }
 
 const css = `
 .counter {
     border: 1px solid red;
 }
-`
+`;
 
-export default mounter(setup, render, hooks, css)
+export default mounter(render, css);
