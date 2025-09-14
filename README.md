@@ -1,0 +1,8 @@
+# Dynamic
+Dynamic is a TypeScript web framework inspired by Vue Vapor.
+
+## Features
+### 🍃 No virtual DOM overhead
+Changes are applied to those DOM nodes that depend on the changed state using effects.
+### 🤗 Familiar lexemes
+Such as ref, computed, watch, watchEffect, onBeforeMount, onUnmounted, 'if' and 'on' directives.
