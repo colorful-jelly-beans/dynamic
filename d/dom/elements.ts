@@ -18,7 +18,10 @@ type RenderFunction<Props> = (
   props: Props
 ) => (DocumentFragment | HTMLNode | Text)[];
 
-const setComponentIDDataAttribute = (element: Element, componentID: number) => {
+export const setComponentIDDataAttribute = (
+  element: Element | HTMLElement,
+  componentID: number
+) => {
   element.setAttribute(`data-d-${componentID}`, "");
 };
 
@@ -125,6 +128,7 @@ export const mount = <Props>(
 
   const docFragm = document.createDocumentFragment();
   docFragm.replaceChildren(...doc);
+  console.log(doc);
 
   if (options) {
     for (let child of docFragm.children) {

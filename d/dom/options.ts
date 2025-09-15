@@ -1,5 +1,10 @@
 import { watch } from "../reactivity/watchers";
-import { HTMLNode, Options } from "./elements";
+import {
+  currentComponentID,
+  HTMLNode,
+  Options,
+  setComponentIDDataAttribute,
+} from "./elements";
 
 export const addOptionsToElem = (elem: HTMLNode, options: Options) => {
   let out = elem;
@@ -15,11 +20,16 @@ export const addOptionsToElem = (elem: HTMLNode, options: Options) => {
       if (directive === "if") {
         const commentNode = document.createComment("_if");
         let node: HTMLNode = commentNode;
+        const componentID = currentComponentID;
 
         watch(
           [() => options[o].value],
           (newValue) => {
             if (newValue) {
+              if (elem instanceof Element || elem instanceof HTMLElement) {
+                setComponentIDDataAttribute(elem, componentID);
+              }
+
               node.replaceWith(elem);
               node = elem;
             } else {
