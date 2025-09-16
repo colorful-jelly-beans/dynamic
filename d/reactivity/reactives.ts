@@ -1,4 +1,4 @@
-import { UniversalCallback } from "../dom/elements";
+import { UniversalCallback } from "../dom/element";
 import { activeEffect } from "./globals";
 import { Effect, watchEffect } from "./watchers";
 

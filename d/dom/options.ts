@@ -1,10 +1,6 @@
 import { watch } from "../reactivity/watchers";
-import {
-  currentComponentID,
-  HTMLNode,
-  Options,
-  setComponentIDDataAttribute,
-} from "./elements";
+import { HTMLNode, Options, setComponentIDDataAttribute } from "./element";
+import { currentComponentID } from "./globals";
 
 export const addOptionsToElem = (elem: HTMLNode, options: Options) => {
   let out = elem;

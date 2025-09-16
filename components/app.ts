@@ -1,5 +1,13 @@
-import { route, router, ref, watch, computed, mounter, e } from "../d/index";
-import { onBeforeMount } from "../d/lifecycle/hooks";
+import {
+  route,
+  router,
+  ref,
+  watch,
+  computed,
+  mounter,
+  e,
+  onBeforeMount,
+} from "../d/index";
 
 import Message from "./message";
 

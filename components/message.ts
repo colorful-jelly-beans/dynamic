@@ -1,5 +1,4 @@
-import { e, mounter, Ref } from "../d/index";
-import { onBeforeMount, onUnmounted } from "../d/lifecycle/hooks";
+import { e, mounter, onBeforeMount, onUnmounted, Ref } from "../d/index";
 
 interface P {
   counter: Ref<number>;

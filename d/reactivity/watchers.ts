@@ -1,4 +1,4 @@
-import { UniversalCallback } from "../dom/elements.js";
+import { UniversalCallback } from "../dom/element.js";
 import { setActiveEffect } from "./globals.js";
 
 export type Effect = () => void;

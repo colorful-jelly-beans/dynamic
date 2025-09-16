@@ -1,6 +1,9 @@
+export * from "./dom/component";
 export * from "./dom/content";
-export * from "./dom/elements";
+export * from "./dom/element";
 export * from "./dom/options";
+
+export * from "./lifecycle/hooks";
 
 export * from "./reactivity/globals";
 export * from "./reactivity/reactives";
